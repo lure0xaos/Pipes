@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Created-By: 1.6.0-b105 (Sun Microsystems Inc.)
+MIDlet-1: Pipes,/icon.png,PipesMIDlet
+MIDlet-Vendor: kornhornio.net
+MIDlet-Name: Pipes
+MIDlet-Version: 1.1.2
+MicroEdition-Configuration: CLDC-1.0
+MicroEdition-Profile: MIDP-1.0
+
