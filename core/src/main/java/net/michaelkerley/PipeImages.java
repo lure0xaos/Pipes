@@ -1,9 +1,5 @@
 package net.michaelkerley;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 import java.io.IOException;
@@ -26,7 +22,6 @@ public final class PipeImages {
         setSize(size - 1);
     }
 
-    @Contract(pure = true)
     private static int getBestBitmapSize(int preferredSize) {
         for (int bitmapSize : BITMAP_SIZES) {
             if (bitmapSize <= preferredSize) {
@@ -36,13 +31,12 @@ public final class PipeImages {
         return 0;
     }
 
-    private static @NotNull Image extractImage(Image source, int xOffset, int yOffset, int width, int height) {
+    private static Image extractImage(Image source, int xOffset, int yOffset, int width, int height) {
         Image img = Image.createImage(width, height);
         img.getGraphics().drawImage(source, -xOffset, -yOffset, Graphics.TOP | Graphics.LEFT);
         return img;
     }
 
-    @Contract(pure = true)
     public static int getSize() {
         return size;
     }
@@ -95,7 +89,7 @@ public final class PipeImages {
         loadBitmaps();
     }
 
-    public static @Nullable Image loadImage(@Nullable String[] fileNames, int maxWidth, int maxHeight) {
+    public static Image loadImage(String[] fileNames, int maxWidth, int maxHeight) {
         if (fileNames == null || fileNames.length == 0) {
             return null;
         }

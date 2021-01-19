@@ -1,11 +1,10 @@
 package javax.microedition.lcdui;
 
-import org.intellij.lang.annotations.MagicConstant;
 
-import java.awt.*;
+import java.awt.FontMetrics;
 import java.awt.image.BufferedImage;
 
-public class Font {
+public final class Font {
     public static final int FACE_MONOSPACE = 32;
     public static final int FACE_PROPORTIONAL = 64;
     public static final int FACE_SYSTEM = 0;
@@ -19,10 +18,10 @@ public class Font {
     public static final int FONT_SIZE_LARGE = 32;
     public static final int FONT_SIZE_MEDIUM = 16;
     public static final int FONT_SIZE_SMALL = 8;
-    final java.awt.Font peer;
+    private final java.awt.Font peer;
     private final FontMetrics fontMetrics;
 
-    Font(java.awt.Font peer) {
+    private Font(java.awt.Font peer) {
         this.peer = peer;
         fontMetrics = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB).getGraphics().getFontMetrics(peer);
     }
@@ -35,8 +34,9 @@ public class Font {
                 return java.awt.Font.DIALOG;
             case FACE_SYSTEM:
                 return java.awt.Font.DIALOG_INPUT;
+            default:
+                throw new IllegalArgumentException(String.format("invalid constant for FACE: %d", face));
         }
-        throw new IllegalArgumentException(String.format("invalid constant for FACE: %d", face));
     }
 
     public static Font getDefaultFont() {
@@ -59,7 +59,6 @@ public class Font {
         throw new IllegalArgumentException(String.format("invalid constant for SIZE: %d", size));
     }
 
-    @MagicConstant(flags = {java.awt.Font.BOLD, java.awt.Font.ITALIC, java.awt.Font.PLAIN})
     private static int style(int style) {
         switch (style) {
             case STYLE_BOLD:
@@ -78,23 +77,27 @@ public class Font {
         return fontMetrics.getAscent();
     }
 
-    int getBaselinePosition(FontMetrics fontMetrics) {
-        return fontMetrics.getAscent();
+    int getBaselinePosition(FontMetrics fm) {
+        return fm.getAscent();
     }
 
     public int getHeight() {
         return fontMetrics.getHeight();
     }
 
-    int getHeight(FontMetrics fontMetrics) {
-        return fontMetrics.getHeight();
+    int getHeight(FontMetrics fm) {
+        return fm.getHeight();
+    }
+
+    public java.awt.Font getPeer() {
+        return peer;
     }
 
     public int stringWidth(String s) {
         return fontMetrics.stringWidth(s);
     }
 
-    int stringWidth(FontMetrics fontMetrics, String s) {
-        return fontMetrics.stringWidth(s);
+    int stringWidth(FontMetrics fm, String s) {
+        return fm.stringWidth(s);
     }
 }

@@ -2,7 +2,7 @@ package javax.microedition.lcdui;
 
 import java.util.Objects;
 
-public class Command {
+public final class Command {
     public static final int BACK = 2;
     public static final int CANCEL = 3;
     public static final int EXIT = 7;
@@ -36,8 +36,12 @@ public class Command {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof Command)) return false;
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof Command)) {
+            return false;
+        }
         Command command = (Command) obj;
         return commandType == command.commandType &&
                 Objects.equals(label, command.label);

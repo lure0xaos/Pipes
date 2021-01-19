@@ -1,10 +1,11 @@
 package javax.microedition.lcdui;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.FontMetrics;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Graphics {
+public final class Graphics {
     public static final int BASELINE = 64;
     public static final int BOTTOM = 32;
     public static final int HCENTER = 1;
@@ -13,10 +14,10 @@ public class Graphics {
     public static final int TOP = 16;
     public static final int VCENTER = 2;
     private static final Map<java.awt.Graphics, Graphics> peers = new HashMap<>();
-    final java.awt.Graphics peer;
+    private final java.awt.Graphics peer;
     private Font font = Font.getDefaultFont();
 
-    Graphics(java.awt.Graphics graphics) {
+    private Graphics(java.awt.Graphics graphics) {
         peer = graphics;
     }
 
@@ -50,7 +51,7 @@ public class Graphics {
         if ((anchor & BOTTOM) != 0) {
             yy = y - image.getHeight();
         }
-        peer.drawImage(image.peer, xx, yy, null);
+        peer.drawImage(image.getPeer(), xx, yy, null);
     }
 
     public void drawLine(int x1, int y1, int x2, int y2) {

@@ -5,8 +5,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 
-public class Image {
-    public final java.awt.Image peer;
+public final class Image {
+    private final java.awt.Image peer;
     private Graphics graphics;
 
     private Image(java.awt.Image image) {
@@ -31,6 +31,10 @@ public class Image {
 
     public int getHeight() {
         return peer.getHeight(null);
+    }
+
+    java.awt.Image getPeer() {
+        return peer;
     }
 
     public int getWidth() {

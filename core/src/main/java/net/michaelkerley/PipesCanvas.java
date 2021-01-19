@@ -1,19 +1,21 @@
 package net.michaelkerley;
 
-import org.jetbrains.annotations.NotNull;
-
-import javax.microedition.lcdui.*;
+import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Command;
+import javax.microedition.lcdui.CommandListener;
+import javax.microedition.lcdui.Displayable;
+import javax.microedition.lcdui.Graphics;
+import javax.microedition.lcdui.Image;
 import javax.microedition.midlet.MIDletStateChangeException;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
 
-@SuppressWarnings("LawOfDemeter")
-class PipesCanvas extends Canvas implements CommandListener {
-    private final Logger logger = Logger.getLogger(PipesCanvas.class.getName());
-    private final @NotNull PipesGame game;
+final class PipesCanvas extends Canvas implements CommandListener {
+    private static final Logger logger = Logger.getLogger(PipesCanvas.class.getName());
+    private final PipesGame game;
     private final PipesMIDlet midlet;
-    private final @NotNull Image offscreenGraphics;
+    private final Image offscreenGraphics;
     private final Timer timer = new Timer();
 
     public PipesCanvas(PipesMIDlet midlet, String version) {
@@ -34,7 +36,7 @@ class PipesCanvas extends Canvas implements CommandListener {
     }
 
     @Override
-    protected void paint(@NotNull Graphics graphics) {
+    protected void paint(Graphics graphics) {
         game.paint(offscreenGraphics.getGraphics(), getWidth(), getHeight());
         graphics.drawImage(offscreenGraphics, 0, 0, Graphics.LEFT | Graphics.TOP);
     }
@@ -52,13 +54,13 @@ class PipesCanvas extends Canvas implements CommandListener {
         game.showAbout();
     }
 
-    public void commandsRemove(@NotNull Command... commands) {
+    public void commandsRemove(Command... commands) {
         for (Command command : commands) {
             addCommand(command);
         }
     }
 
-    public void commandsAdd(@NotNull Command... commands) {
+    public void commandsAdd(Command... commands) {
         for (Command command : commands) {
             addCommand(command);
         }
@@ -82,7 +84,7 @@ class PipesCanvas extends Canvas implements CommandListener {
         midlet.help(title, text);
     }
 
-    public void schedule(@NotNull Runnable runnable, long time) {
+    public void schedule(Runnable runnable, long time) {
         timer.schedule(new RunnableTimerTask(runnable), time);
     }
 
@@ -93,9 +95,9 @@ class PipesCanvas extends Canvas implements CommandListener {
     }
 
     private static class RunnableTimerTask extends TimerTask {
-        private final @NotNull Runnable runnable;
+        private final Runnable runnable;
 
-        public RunnableTimerTask(@NotNull Runnable runnable) {
+        public RunnableTimerTask(Runnable runnable) {
             this.runnable = runnable;
         }
 

@@ -1,16 +1,25 @@
 package javax.microedition.lcdui;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.SwingUtilities;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public abstract class Displayable {
     private final Map<Command, JMenuItem> commands = Collections.synchronizedMap(new LinkedHashMap<>());
     private final List<Command> orphans = Collections.synchronizedList(new LinkedList<>());
-    final JComponent peer;
+    private final JComponent peer;
     private CommandListener commandListener;
     private final ActionListener listener = new ActionListener() {
         @Override
@@ -19,7 +28,7 @@ public abstract class Displayable {
                 commands.forEach((key, value) -> {
                     if (Objects.equals(e.getSource(), value)) {
                         commandListener.commandAction(key, Displayable.this);
-                        peer.getRootPane().repaint();
+                        getPeer().getRootPane().repaint();
                     }
                 });
             }
@@ -33,7 +42,7 @@ public abstract class Displayable {
         peer.setPreferredSize(size);
     }
 
-    public synchronized void addCommand(Command command) {
+    public final synchronized void addCommand(Command command) {
         JMenuBar menuBar = getMenuBar();
         if (menuBar != null) {
             JMenuItem item = createMenuItem(command);
@@ -50,7 +59,7 @@ public abstract class Displayable {
         return item;
     }
 
-    public int getHeight() {
+    public final int getHeight() {
         return peer.getHeight();
     }
 
@@ -58,28 +67,31 @@ public abstract class Displayable {
         JFrame ancestor = (JFrame) SwingUtilities.getAncestorOfClass(JFrame.class, peer);
         if (ancestor == null) {
             return null;
-        } else {
-            JMenuBar menuBar = ancestor.getJMenuBar();
-            if (menuBar == null) {
-                menuBar = new JMenuBar();
-                ancestor.setJMenuBar(menuBar);
-            }
-            return menuBar;
         }
+        JMenuBar menuBar = ancestor.getJMenuBar();
+        if (menuBar == null) {
+            menuBar = new JMenuBar();
+            ancestor.setJMenuBar(menuBar);
+        }
+        return menuBar;
     }
 
-    public int getWidth() {
-        return peer.getWidth();
+    public final JComponent getPeer() {
+        return peer;
+    }
+
+    public final int getWidth() {
+        return getPeer().getWidth();
     }
 
     private synchronized void invokeAndWait(Runnable runnable) {
-        (runnable).run();
-        peer.getRootPane().validate();
-        peer.getRootPane().repaint();
+        runnable.run();
+        getPeer().getRootPane().validate();
+        getPeer().getRootPane().repaint();
     }
 
 
-    synchronized void onAdd() {
+    final synchronized void onAdd() {
         JMenuBar menuBar = getMenuBar();
         if (menuBar != null) {
             for (Iterator<Command> iterator = orphans.iterator(); iterator.hasNext(); ) {
@@ -92,7 +104,7 @@ public abstract class Displayable {
         }
     }
 
-    synchronized void onRemove() {
+    final synchronized void onRemove() {
         JMenuBar menuBar = getMenuBar();
         if (menuBar != null) {
             for (Iterator<Map.Entry<Command, JMenuItem>> iterator = commands.entrySet().iterator(); iterator.hasNext(); ) {
@@ -121,7 +133,7 @@ public abstract class Displayable {
         }
     }
 
-    public void setCommandListener(CommandListener commandListener) {
+    public final void setCommandListener(CommandListener commandListener) {
         this.commandListener = commandListener;
     }
 }

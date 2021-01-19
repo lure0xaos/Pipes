@@ -1,24 +1,22 @@
 package net.michaelkerley;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.microedition.rms.InvalidRecordIDException;
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
 import java.util.logging.Logger;
 
-public class PipeStore {
+public final class PipeStore {
     private static final String STORE_NAME = "PipesStore";
     private static final int STORE_PIPES_RECORD = 2;
     private static final int STORE_SIZE_RECORD = 1;
-    private final Logger logger = Logger.getLogger(PipeStore.class.getName());
+    private static final Logger logger = Logger.getLogger(PipeStore.class.getName());
     private final PipesGame canvas;
 
     public PipeStore(PipesGame game) {
-        this.canvas = game;
+        canvas = game;
     }
 
-    public void save(@NotNull PipesInfo info) {
+    public void save(PipesInfo info) {
         int cols = info.getCols();
         int rows = info.getRows();
         if (info.noPipes()) {
@@ -65,7 +63,7 @@ public class PipeStore {
         }
     }
 
-    public boolean load(@NotNull PipesInfo info, int defCols, int defRows) {
+    public boolean load(PipesInfo info, int defCols, int defRows) {
         boolean success = true;
         RecordStore rs = null;
         try {

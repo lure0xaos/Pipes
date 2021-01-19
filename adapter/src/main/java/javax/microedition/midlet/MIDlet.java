@@ -6,20 +6,17 @@ import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
-@SuppressWarnings({"EmptyMethod", "RedundantThrows"})
 public abstract class MIDlet {
     public Display display;
 
     public static void main(String[] args) throws ReflectiveOperationException {
-        //noinspection unchecked
         ((Class<? extends MIDlet>) Class.forName(args[0])).getConstructor().newInstance().showMe();
     }
 
-    @SuppressWarnings("SameParameterValue")
     protected void destroyApp(boolean unconditional) throws MIDletStateChangeException {
     }
 
-    public String getAppProperty(String name) {
+    protected final String getAppProperty(String name) {
         try {
             Manifest manifest = new Manifest(getClass().getClassLoader().getResourceAsStream(JarFile.MANIFEST_NAME));
             Attributes mainAttributes = manifest.getMainAttributes();
@@ -38,9 +35,9 @@ public abstract class MIDlet {
         } catch (MIDletStateChangeException e) {
 //            throw new RuntimeException(e.getMessage(), e);
         }
-        display.peer.dispose();
+        display.getPeer().dispose();
         try {
-            Thread.sleep(1000);
+            Thread.sleep(1000L);
             System.exit(-1);
         } catch (InterruptedException ignored) {
             //
@@ -54,7 +51,7 @@ public abstract class MIDlet {
     protected void pauseApp() {
     }
 
-    protected void resumeApp() {
+    private void resumeApp() {
     }
 
     public final void resumeRequest() {
@@ -62,7 +59,7 @@ public abstract class MIDlet {
     }
 
     void showMe() {
-        Display.getDisplay(this).peer.setVisible(true);
+        Display.getDisplay(this).getPeer().setVisible(true);
         try {
             startApp();
         } catch (MIDletStateChangeException e) {

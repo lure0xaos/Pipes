@@ -1,44 +1,35 @@
 package net.michaelkerley;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
+import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.Graphics;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Stack;
-import java.util.logging.Logger;
 
-import static javax.microedition.lcdui.Canvas.*;
-import static net.michaelkerley.PipeMode.*;
-
-@SuppressWarnings("LawOfDemeter")
-class PipesGame {
+final class PipesGame {
     private static final int COLS = 8;
     private static final int ROWS = 8;
     private static final int AUTO_CLOSE = 2000;
     private static final int ROTATIONS = 20;
-    private final Logger logger = Logger.getLogger(PipesGame.class.getName());
-    private final @NotNull Command commandAbout;
-    private final @NotNull Command commandHelp;
-    private final @NotNull Command commandOk;
-    private final @NotNull Command commandQuit;
-    private final @NotNull Command commandReset;
-    private final @NotNull Command commandResize;
-    private final @NotNull Command commandRotate;
+    private final Command commandAbout;
+    private final Command commandHelp;
+    private final Command commandOk;
+    private final Command commandQuit;
+    private final Command commandReset;
+    private final Command commandResize;
+    private final Command commandRotate;
     private final String version;
     private final Stack<Pipe> connectedPipes = new Stack<>();
     private final Stack<Pipe> toBeChecked = new Stack<>();
-    private final @NotNull PipePainter painter;
-    private final @NotNull PipeStore store;
+    private final PipePainter painter;
+    private final PipeStore store;
     private final PipesInfo info = new PipesInfo(COLS, ROWS);
-    private final @NotNull PipesCanvas canvas;
+    private final PipesCanvas canvas;
     private int cursorX;
     private int cursorY;
-    private @NotNull PipeMode mode = MODE_GAME;
+    private PipeMode mode = PipeMode.MODE_GAME;
 
     public PipesGame(PipesCanvas canvas, String version) {
         this.canvas = canvas;
@@ -97,8 +88,7 @@ class PipesGame {
         }
     }
 
-    @SuppressWarnings("MethodMayBeStatic")
-    private void setConnectedIf(@NotNull Collection<Pipe> connected, @NotNull Pipe pipe, @Nullable Pipe pipe2, int reverseDirection, int direction) {
+    private void setConnectedIf(Collection<Pipe> connected, Pipe pipe, Pipe pipe2, int reverseDirection, int direction) {
         if (pipe2 != null && pipe2.getConnections() == 0) {
             pipe.setConnected(direction, true);
             pipe2.setConnected(reverseDirection, true);
@@ -132,17 +122,17 @@ class PipesGame {
             }
         }
         if (connectedPipes.size() == (rows * cols)) {
-            setMode(MODE_YOU_WIN, true);
+            setMode(PipeMode.MODE_YOU_WIN, true);
         }
     }
 
-    private void setConnection(@NotNull Pipe pipe) {
+    private void setConnection(Pipe pipe) {
         connectedPipes.add(pipe);
         toBeChecked.add(pipe);
         pipe.setInConnectedSet(true);
     }
 
-    private void checkConnection(@Nullable Pipe pipe2, int conn) {
+    private void checkConnection(Pipe pipe2, int conn) {
         if (pipe2 != null && pipe2.isConnected(conn) && pipe2.isInUnconnectedSet()) {
             setConnection(pipe2);
         }
@@ -156,11 +146,11 @@ class PipesGame {
         } else if (command == commandQuit) {
             canvas.quit();
         } else if (command == commandResize) {
-            setMode(MODE_RESIZE, true);
+            setMode(PipeMode.MODE_RESIZE, true);
         } else if (command == commandOk) {
-            setMode(MODE_GAME, true);
+            setMode(PipeMode.MODE_GAME, true);
         } else if (command == commandAbout) {
-            setMode(MODE_ABOUT, true);
+            setMode(PipeMode.MODE_ABOUT, true);
         } else if (command == commandHelp) {
             canvas.help(PipeMessages.HELP_ALERT_TITLE, PipeMessages.HELP_ALERT_TEXT);
         }
@@ -201,7 +191,7 @@ class PipesGame {
     private void startGame(PipeMode oldMode) {
         assertValidCursor();
         PipeImages.loadBitmaps();
-        if (oldMode != MODE_ABOUT && oldMode != MODE_GAME) {
+        if (oldMode != PipeMode.MODE_ABOUT && oldMode != PipeMode.MODE_GAME) {
             init();
         }
         checkConnections();
@@ -229,8 +219,8 @@ class PipesGame {
         repaint();
         scramblePipes();
         checkConnections();
-        if (mode != MODE_GAME) {
-            setMode(MODE_GAME, false);
+        if (mode != PipeMode.MODE_GAME) {
+            setMode(PipeMode.MODE_GAME, false);
         }
     }
 
@@ -280,7 +270,7 @@ class PipesGame {
                 keyPressedResize(gameAction, PipeImages.getSize());
                 break;
             case MODE_ABOUT:
-                setMode(MODE_GAME, true);
+                setMode(PipeMode.MODE_GAME, true);
                 break;
         }
     }
@@ -289,54 +279,54 @@ class PipesGame {
         int cols = info.getCols();
         int rows = info.getRows();
         switch (gameAction) {
-            case UP:
+            case Canvas.UP:
                 --cursorY;
                 if (cursorY < 0) {
                     cursorY = rows - 1;
                 }
                 repaint();
                 break;
-            case LEFT:
+            case Canvas.LEFT:
                 --cursorX;
                 if (cursorX < 0) {
                     cursorX = cols - 1;
                 }
                 repaint();
                 break;
-            case DOWN:
+            case Canvas.DOWN:
                 ++cursorY;
                 if (cursorY >= rows) {
                     cursorY = 0;
                 }
                 repaint();
                 break;
-            case RIGHT:
+            case Canvas.RIGHT:
                 ++cursorX;
                 if (cursorX >= cols) {
                     cursorX = 0;
                 }
                 repaint();
                 break;
-            case FIRE:
+            case Canvas.FIRE:
                 rotate(true);
                 repaint();
                 break;
             default:
                 //noinspection NestedSwitchStatement
                 switch (keyCode) {
-                    case KEY_NUM1:
+                    case Canvas.KEY_NUM1:
                         rotate(false);
                         repaint();
                         break;
-                    case KEY_NUM3:
+                    case Canvas.KEY_NUM3:
                         rotate(true);
                         repaint();
                         break;
-                    case KEY_STAR:
+                    case Canvas.KEY_STAR:
                         PipeImages.zoom(false);
                         repaint();
                         break;
-                    case KEY_POUND:
+                    case Canvas.KEY_POUND:
                         PipeImages.zoom(true);
                         repaint();
                         break;
@@ -349,21 +339,21 @@ class PipesGame {
         int cols = info.getCols();
         int rows = info.getRows();
         switch (gameAction) {
-            case UP:
+            case Canvas.UP:
                 if (rows > 2) {
                     info.setRows(rows - 1);
                     initPipeSize();
                 }
                 repaint();
                 break;
-            case LEFT:
+            case Canvas.LEFT:
                 if (cols > 2) {
                     info.setCols(cols - 1);
                     initPipeSize();
                 }
                 repaint();
                 break;
-            case DOWN:
+            case Canvas.DOWN:
                 info.setRows(rows + 1);
                 initPipeSize();
                 if (smallSize) {
@@ -372,7 +362,7 @@ class PipesGame {
                 }
                 repaint();
                 break;
-            case RIGHT:
+            case Canvas.RIGHT:
                 info.setCols(cols + 1);
                 initPipeSize();
                 if (smallSize) {
@@ -381,7 +371,7 @@ class PipesGame {
                 }
                 repaint();
                 break;
-            case FIRE:
+            case Canvas.FIRE:
                 onAction(commandOk);
                 break;
         }
@@ -427,24 +417,23 @@ class PipesGame {
     }
 
     public void showAbout() {
-        setMode(MODE_ABOUT, true);
+        setMode(PipeMode.MODE_ABOUT, true);
         canvas.schedule(this::closeAbout, AUTO_CLOSE);
     }
 
     private void closeAbout() {
-        if (isMode(MODE_ABOUT)) {
-            setMode(MODE_GAME, true);
+        if (isMode(PipeMode.MODE_ABOUT)) {
+            setMode(PipeMode.MODE_GAME, true);
         }
     }
 
-    @Contract(pure = true)
     private boolean isMode(PipeMode mode) {
         return this.mode == mode;
     }
 
     private void closeYouWin() {
-        if (isMode(MODE_YOU_WIN)) {
-            setMode(MODE_GAME_OVER, true);
+        if (isMode(PipeMode.MODE_YOU_WIN)) {
+            setMode(PipeMode.MODE_GAME_OVER, true);
         }
     }
 

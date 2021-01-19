@@ -1,6 +1,6 @@
 package net.michaelkerley;
 
-public class PipeMessages {
+public final class PipeMessages {
     @SuppressWarnings("SpellCheckingInspection")
     public static final String[] ABOUT_TEXT = {
             "", // Version placeholder - this line will be replaced at runtime
@@ -36,4 +36,7 @@ public class PipeMessages {
     public static final String MESSAGE_ABOUT = "About...";
     public static final String MESSAGE_QUIT = "Quit";
     public static final String MESSAGE_OK = "OK";
+
+    private PipeMessages() {
+    }
 }

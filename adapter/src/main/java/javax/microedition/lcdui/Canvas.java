@@ -1,8 +1,7 @@
 package javax.microedition.lcdui;
 
-import javax.swing.*;
-
-import static java.awt.event.KeyEvent.*;
+import javax.swing.JPanel;
+import java.awt.event.KeyEvent;
 
 public abstract class Canvas extends Displayable {
     public static final int DOWN = 6;
@@ -17,21 +16,21 @@ public abstract class Canvas extends Displayable {
 
     protected Canvas() {
         super(new PeerPanel());
-        ((PeerPanel) peer).displayable = this;
+        ((PeerPanel) getPeer()).setDisplayable(this);
     }
 
-    public int getGameAction(int code) {
+    protected int getGameAction(int code) {
         switch (code) {
-            case VK_UP:
+            case KeyEvent.VK_UP:
                 return UP;
-            case VK_LEFT:
+            case KeyEvent.VK_LEFT:
                 return LEFT;
-            case VK_RIGHT:
+            case KeyEvent.VK_RIGHT:
                 return RIGHT;
-            case VK_DOWN:
+            case KeyEvent.VK_DOWN:
                 return DOWN;
-            case VK_ENTER:
-            case VK_SPACE:
+            case KeyEvent.VK_ENTER:
+            case KeyEvent.VK_SPACE:
                 return FIRE;
         }
         return 0;
@@ -43,18 +42,25 @@ public abstract class Canvas extends Displayable {
     protected void keyRepeated(int keyCode) {
     }
 
-    public void repaint() {
-        peer.repaint();
+    public final void repaint() {
+        getPeer().repaint();
     }
 
-    @SuppressWarnings("NonSerializableFieldInSerializableClass")
-    private static class PeerPanel extends JPanel {
+    private static final class PeerPanel extends JPanel {
         private static final long serialVersionUID = 3277821937516211666L;
-        Displayable displayable;
+        private Displayable displayable;
+
+        Displayable getDisplayable() {
+            return displayable;
+        }
 
         @Override
         public void paint(java.awt.Graphics g) {
             displayable.paint(Graphics.forGraphics(g));
+        }
+
+        void setDisplayable(Displayable displayable) {
+            this.displayable = displayable;
         }
     }
 }

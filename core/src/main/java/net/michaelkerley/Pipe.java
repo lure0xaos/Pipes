@@ -1,7 +1,6 @@
 package net.michaelkerley;
 
-@SuppressWarnings("LawOfDemeter")
-public class Pipe {
+public final class Pipe {
     private final int x;
     private final int y;
     private byte connections;
@@ -46,7 +45,7 @@ public class Pipe {
 
     public void rotate(boolean clockwise) {
         if (clockwise) {
-            connections *= 2;
+            connections <<= 1;
             if (isConnected(PipeConn.CONN_OVERFLOW)) {
                 setConnected(PipeConn.CONN_OVERFLOW, false);
                 setConnected(PipeConn.CONN_UP, true);

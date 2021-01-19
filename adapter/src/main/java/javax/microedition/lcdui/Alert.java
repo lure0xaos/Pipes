@@ -2,7 +2,7 @@ package javax.microedition.lcdui;
 
 import javax.swing.JOptionPane;
 
-public class Alert extends Displayable {
+public final class Alert extends Displayable {
     public static final int FOREVER = -1;
 
     public Alert(String title, String text, Image image, AlertType alertType) {
@@ -10,6 +10,6 @@ public class Alert extends Displayable {
     }
 
     public void setTimeout(int timeout) {
-        peer.setVisible(true);
+        getPeer().setVisible(true);
     }
 }

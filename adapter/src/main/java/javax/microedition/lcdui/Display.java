@@ -1,17 +1,19 @@
 package javax.microedition.lcdui;
 
 import javax.microedition.midlet.MIDlet;
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JFrame;
+import javax.swing.WindowConstants;
+import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class Display {
+public final class Display {
     public static final int HEIGHT = 400;
     public static final int WIDTH = 300;
-    public final JFrame peer;
+    private final JFrame peer;
     private Displayable displayable;
 
     private Display(MIDlet miDlet) {
@@ -42,23 +44,27 @@ public class Display {
         return miDlet.display;
     }
 
+    public JFrame getPeer() {
+        return peer;
+    }
+
     public void setCurrent(Displayable displayable) {
         Container pane = peer.getContentPane();
         if (this.displayable != null) {
             this.displayable.onRemove();
-            pane.remove(this.displayable.peer);
+            pane.remove(this.displayable.getPeer());
         }
         this.displayable = displayable;
-        pane.add(displayable.peer, BorderLayout.CENTER);
+        pane.add(displayable.getPeer(), BorderLayout.CENTER);
         displayable.onAdd();
         peer.validate();
         peer.repaint();
     }
 
-    private static class DisplayWindowAdapter extends WindowAdapter {
+    private static final class DisplayWindowAdapter extends WindowAdapter {
         private final MIDlet miDlet;
 
-        public DisplayWindowAdapter(MIDlet miDlet) {
+        DisplayWindowAdapter(MIDlet miDlet) {
             this.miDlet = miDlet;
         }
 

@@ -1,11 +1,15 @@
 package javax.microedition.rms;
 
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
 
-public class RecordStore {
+public final class RecordStore {
     private static final String ENV_USER_HOME = "user.home";
     private static final String EXT = ".rms";
     private static final Path ROOT = Paths.get(System.getProperty(ENV_USER_HOME)).toAbsolutePath();
@@ -41,9 +45,8 @@ public class RecordStore {
                     if (exc == null) {
                         Files.delete(dir);
                         return FileVisitResult.CONTINUE;
-                    } else {
-                        throw exc;
                     }
+                    throw exc;
                 }
             });
         } catch (IOException e) {
@@ -63,7 +66,6 @@ public class RecordStore {
         setRecord(num, bytes, offset, length);
     }
 
-    @SuppressWarnings({"EmptyMethod", "RedundantThrows"})
     public void closeRecordStore() throws RecordStoreException {
     }
 

@@ -1,14 +1,10 @@
 package net.michaelkerley;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
-@SuppressWarnings("MethodMayBeStatic")
-public class PipePainter {
+public final class PipePainter {
 
     private static final int ARC = 360;
     private static final int CONNECTED_COLOR = 0x00ff00;
@@ -31,14 +27,14 @@ public class PipePainter {
     private static final int DIM_GRIDLINE_COLOR = 0x323232;
     private static final int GRIDLINE_COLOR = 0x646464;
     private static final int CURSOR_COLOR = 0xffff00;
-    private final @Nullable Image imgYouWin;
+    private final Image imgYouWin;
 
     public PipePainter(int width, int height) {
         imgYouWin = PipeImages.loadImage(new String[]{LOCATION_YOU_WIN_LARGE, LOCATION_YOU_WIN_MEDIUM, LOCATION_YOU_WIN_SMALL}, width, height);
     }
 
-    private void drawPipe(Pipe pipe, @NotNull Graphics g, boolean bright, int size) {
-        int color = pipe.isInConnectedSet() ? (bright ? CONNECTED_COLOR : DIM_CONNECTED_COLOR) : (bright ? DISCONNECTED_COLOR : DIM_DISCONNECTED_COLOR);
+    private void drawPipe(Pipe pipe, Graphics g, boolean bright, int size) {
+        int color = pipe.isInConnectedSet() ? bright ? CONNECTED_COLOR : DIM_CONNECTED_COLOR : bright ? DISCONNECTED_COLOR : DIM_DISCONNECTED_COLOR;
         int pipeX = pipe.getX() * (size + 1) + 1;
         int pipeY = pipe.getY() * (size + 1) + 1;
         if (bright && PipeImages.imagesLoaded) {
@@ -52,25 +48,25 @@ public class PipePainter {
         g.setColor(COLOR_BLACK);
         g.fillRect(pipeX, pipeY, size, size);
         g.setColor(color);
-        int size_3 = size / 3;
-        g.fillArc(pipeX + size_3, pipeY + size_3, size_3, size_3, 0, ARC); // center ball
-        int size_2 = size / 2;
+        int size3 = size / 3;
+        g.fillArc(pipeX + size3, pipeY + size3, size3, size3, 0, ARC); // center ball
+        int size2 = size / 2;
         if (pipe.isConnected(PipeConn.CONN_UP)) {
-            g.fillRect(pipeX + size_3, pipeY, size_3, size_2);
+            g.fillRect(pipeX + size3, pipeY, size3, size2);
         }
         if (pipe.isConnected(PipeConn.CONN_DOWN)) {
-            g.fillRect(pipeX + size_3, pipeY + size_2, size_3, size_2 + 1);
+            g.fillRect(pipeX + size3, pipeY + size2, size3, size2 + 1);
         }
         if (pipe.isConnected(PipeConn.CONN_RIGHT)) {
-            g.fillRect(pipeX + size_2, pipeY + size_3, size_2 + 1, size_3);
+            g.fillRect(pipeX + size2, pipeY + size3, size2 + 1, size3);
         }
         if (pipe.isConnected(PipeConn.CONN_LEFT)) {
-            g.fillRect(pipeX, pipeY + size_3, size_2, size_3);
+            g.fillRect(pipeX, pipeY + size3, size2, size3);
         }
     }
 
 
-    private void paintYouWin(@NotNull Graphics offscreen, int width, int height) {
+    private void paintYouWin(Graphics offscreen, int width, int height) {
         if (imgYouWin != null) {
             offscreen.drawImage(imgYouWin, width / 2, height / 2, Graphics.HCENTER | Graphics.VCENTER);
         } else {
@@ -168,7 +164,7 @@ public class PipePainter {
     }
 
 
-    void paintOffScreen(@NotNull Graphics offscreen, PipesInfo info, int size, int width, int height, int cursorX, int cursorY, PipeMode mode, String version) {
+    void paintOffScreen(Graphics offscreen, PipesInfo info, int size, int width, int height, int cursorX, int cursorY, PipeMode mode, String version) {
         if (info != null) {
             paintPipes(offscreen, size, width, height, cursorX, cursorY, mode, info);
         }
